@@ -1,0 +1,5 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=2310
+
+This plugin automatically sets the shell option to point to msys location.
+It lets you have both Portable GVim and msys+MinGW on your portable usb stick, without needing to set the path every time you plug in the usb stick, thus giving you portable compiling powers :-)
+
