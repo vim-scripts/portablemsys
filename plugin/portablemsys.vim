@@ -1,7 +1,9 @@
-" portablemsys.vim plugin version 1.0.0
+" portablemsys.vim plugin version 1.0.1
 " By ronh, placed in the public domain, feel free to do whatever
-" Created: July 25, 2008
-
+" Versions: 1.0.1 July 29, 2008
+"				- Fixed :shell not showing up
+"			1.0.0 July 25, 2008
+"				- Initial release
 " Features: Enables integrating an msys shell with Portable GVim,
 " This is achieved by setting the 'shell' options automatically
 " to the current drive letter Portable GVim is located at, or in
@@ -13,10 +15,8 @@
 " let Msys='PortableApps\msys'
 " which tells this script where you placed the msys shell relative
 " to Portable GVim's drive letter.
-" if you don't, I will stupidly assume your msys is placed in the
+" If you don't, I will stupidly assume your msys is placed in the
 " Tools folder.
-
-" Todo: executing the command :shell doesn't bring up an msys shell
 
 " ========================================================================
 
@@ -41,15 +41,21 @@ endif
 " Make Msys's location relative to GVim by concatenating Msys's location
 " to GVim's drive letter
 let MsysDir=GVimDir[0] . ":\\" . MsysLocation
+let TempDir=MsysDir
 " Add back-slash before spaces in the path (needed to mimic unix paths)
 let MsysDir=substitute(MsysDir, '\ ', '\\ ', "g")
 " Lastly, set the string to execute - "set shell" command
-" Note: I added a semicolon before the path. This makes sure the call
-" for the shell is executed right away, this is critical!
-let ExecThis='set shell=;\"' . MsysDir . '\bin\"\sh.exe\ --login'
+let ExecThis='set shell=' . MsysDir . '\bin\sh.exe\ --login\ -i'
+exe ExecThis
+
+" Set the $HOME variable, will cause Msys's home to be located where
+" previously set in the variable Msys, inside the home directory.
+let TempDir=substitute(MsysDir, '\', '/', "g")
+let TempDir=substitute(TempDir, '/ ', '/\ ', "g")
+let ExecThis='let $HOME="' . TempDir . '/home/"'
 exe ExecThis
 
 " Eventually, commands such as :!make will look like this:
-" ;"G:\PortableApps\msys\bin"\sh.exe --login -c "make" 
+" F:\PortableApps\msys\bin\sh.exe --login -i -c "make" 
 " Thus, enabling GVim to work with msys portably on a usb stick
 
