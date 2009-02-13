@@ -1,6 +1,9 @@
-" portablemsys.vim plugin version 1.0.1
+" portablemsys.vim plugin version 1.0.2
 " By ronh, placed in the public domain, feel free to do whatever
-" Versions: 1.0.1 July 29, 2008
+" Versions: 1.0.2 August 1, 2008
+"				- Added support for a fixed (not relative) msys
+"				  location. Just 'let msys=c:\msys' etc.
+"			1.0.1 July 29, 2008
 "				- Fixed :shell not showing up
 "			1.0.0 July 25, 2008
 "				- Initial release
@@ -40,7 +43,12 @@ else
 endif
 " Make Msys's location relative to GVim by concatenating Msys's location
 " to GVim's drive letter
-let MsysDir=GVimDir[0] . ":\\" . MsysLocation
+if (MsysLocation[1]==':')
+	let MsysDir=MsysLocation
+else
+	let MsysDir=GVimDir[0] . ":\\" . MsysLocation
+endif
+
 let TempDir=MsysDir
 " Add back-slash before spaces in the path (needed to mimic unix paths)
 let MsysDir=substitute(MsysDir, '\ ', '\\ ', "g")
