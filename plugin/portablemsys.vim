@@ -1,6 +1,9 @@
 " portablemsys.vim plugin version 1.0.2
 " By ronh, placed in the public domain, feel free to do whatever
-" Versions: 1.0.2 August 1, 2008
+" Versions: 1.0.3 January 2, 2010
+" 				- PortableMsys now sets the makeef option to let
+" 				  make create an error file without problems.
+" 			1.0.2 August 1, 2008
 "				- Added support for a fixed (not relative) msys
 "				  location. Just 'let msys=c:\msys' etc.
 "			1.0.1 July 29, 2008
@@ -62,6 +65,10 @@ let TempDir=substitute(MsysDir, '\', '/', "g")
 let TempDir=substitute(TempDir, '/ ', '/\ ', "g")
 let ExecThis='let $HOME="' . TempDir . '/home/"'
 exe ExecThis
+
+" Point make's error file to the HOME folder.
+" This became necessary with gVimPortable 7.2
+set makeef=$HOME\vim###.err
 
 " Eventually, commands such as :!make will look like this:
 " F:\PortableApps\msys\bin\sh.exe --login -i -c "make" 
